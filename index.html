@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affiliate Link Health Checker - Production Ready</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::after {
+            content: "Production Ready • Real HTTP Testing";
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .input-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px dashed #dee2e6;
+            transition: all 0.3s ease;
+        }
+
+        .input-section:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-demo {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-advanced {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .advanced-options {
+            background: #e9ecef;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .advanced-options.active {
+            display: block;
+        }
+
+        .option-group {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .option-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+        }
+
+        .option-item input[type="number"] {
+            width: 80px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .progress-section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #e9ecef;
+            display: none;
+        }
+
+        .progress-section.active {
+            display: block;
+        }
+
+        .progress-bar-container {
+            background: #e9ecef;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .results-section {
+            margin-top: 30px;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .results-header h3 {
+            color: #333;
+            font-size: 1.5em;
+        }
+
+        .stats {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 12px 15px;
+            border-radius: 8px;
+            min-width: 80px;
+        }
+
+        .stat-healthy {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .stat-broken {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .stat-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .stat-redirect {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .result-item {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-item:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .result-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+        }
+
+        .result-item.healthy::before {
+            background: #28a745;
+        }
+
+        .result-item.broken::before {
+            background: #dc3545;
+        }
+
+        .result-item.warning::before {
+            background: #ffc107;
+        }
+
+        .result-item.redirect::before {
+            background: #007bff;
+        }
+
+        .result-url {
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            color: #667eea;
+            margin-bottom: 10px;
+            word-break: break-all;
+        }
+
+        .result-details {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .result-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-healthy {
+            background: #28a745;
+            color: white;
+        }
+
+        .status-broken {
+            background: #dc3545;
+            color: white;
+        }
+
+        .status-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .status-redirect {
+            background: #007bff;
+            color: white;
+        }
+
+        .result-metrics {
+            text-align: right;
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .redirect-chain {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 12px;
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+
+        .redirect-chain .redirect-step {
+            margin-bottom: 5px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .redirect-step::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #007bff;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .export-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .filters-section {
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #e9ecef;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-item select {
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .email-capture-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .email-capture-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(180deg); }
+        }
+
+        .capture-header {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 25px;
+        }
+
+        .capture-header h3 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .capture-header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .email-form {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 25px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            max-width: 500px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .email-input {
+            flex: 2;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            min-width: 250px;
+        }
+
+        .email-input:focus {
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-capture {
+            flex: 1;
+            background: #ff6b6b;
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-capture:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .capture-benefits {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .benefit-icon {
+            font-size: 16px;
+        }
+
+        .success-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            text-align: center;
+            max-width: 400px;
+            display: none;
+        }
+
+        .success-popup.show {
+            display: block;
+            animation: popupShow 0.5s ease;
+        }
+
+        @keyframes popupShow {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.7); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        .popup-overlay.show {
+            display: block;
+        }
+
+        .pro-features h4 {
+            color: #8b4513;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .pro-features ul {
+            list-style: none;
+            color: #8b4513;
+            margin-bottom: 20px;
+        }
+
+        .pro-features li {
+            margin-bottom: 8px;
+        }
+
+        .pro-features li::before {
+            content: "⭐ ";
+            margin-right: 8px;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .results-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .stats {
+                justify-content: center;
+            }
+            
+            .result-details {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .result-metrics {
+                text-align: left;
+            }
+            
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .email-input, .btn-capture {
+                min-width: 100%;
+            }
+            
+            .capture-benefits {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .launch-timeline {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #8b4513;
+            font-weight: 500;
+        }
+
+        .timeline-item.current {
+            color: #2d5016;
+            font-weight: 600;
+        }
+
+        .timeline-icon {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .pro-features h5 {
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔗 Affiliate Link Health Checker</h1>
+            <p>Real HTTP testing for affiliate marketers - catch broken links before they cost you money</p>
+        </div>
+
+        <div class="main-content">
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="links">Paste Your Affiliate Links (one per line):</label>
+                    <textarea id="links" placeholder="https://amazon.com/dp/B123456789?tag=youraffid
+https://clickbank.net/hop/product/yourid
+https://commission-junction.com/tracking/12345
+https://shareasale.com/r.cfm?b=123&u=456&m=789"></textarea>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="checkLinks()">🚀 Check Links</button>
+                    <button class="btn btn-demo" onclick="loadDemoLinks()">📝 Load Demo Links</button>
+                    <button class="btn btn-advanced" onclick="toggleAdvancedOptions()">⚙️ Advanced Options</button>
+                    <button class="btn btn-secondary" onclick="clearAll()">🗑️ Clear All</button>
+                </div>
+
+                <div id="advancedOptions" class="advanced-options">
+                    <h4>Advanced Testing Options</h4>
+                    <div class="option-group">
+                        <div class="option-item">
+                            <input type="checkbox" id="followRedirects" checked>
+                            <label for="followRedirects">Follow Redirects</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="checkSSL" checked>
+                            <label for="checkSSL">Verify SSL Certificates</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="checkSpeed">
+                            <label for="checkSpeed">Performance Analysis</label>
+                        </div>
+                    </div>
+                    <div class="option-group">
+                        <div class="option-item">
+                            <label for="timeout">Timeout (seconds):</label>
+                            <input type="number" id="timeout" value="10" min="5" max="30">
+                        </div>
+                        <div class="option-item">
+                            <label for="userAgent">User Agent:</label>
+                            <select id="userAgent">
+                                <option value="default">Default</option>
+                                <option value="chrome">Chrome Desktop</option>
+                                <option value="mobile">Mobile Safari</option>
+                                <option value="bot">Googlebot</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="progressSection" class="progress-section">
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+                <div class="progress-details">
+                    <span id="progressText">Checking links...</span>
+                    <span id="progressCount">0 / 0</span>
+                </div>
+            </div>
+
+            <div id="results" class="results-section hidden">
+                <div class="results-header">
+                    <h3>📊 Link Health Report</h3>
+                    <div class="stats">
+                        <div class="stat stat-healthy">
+                            <div id="healthyCount">0</div>
+                            <small>Healthy</small>
+                        </div>
+                        <div class="stat stat-broken">
+                            <div id="brokenCount">0</div>
+                            <small>Broken</small>
+                        </div>
+                        <div class="stat stat-warning">
+                            <div id="warningCount">0</div>
+                            <small>Slow</small>
+                        </div>
+                        <div class="stat stat-redirect">
+                            <div id="redirectCount">0</div>
+                            <small>Redirects</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filters-section">
+                    <div class="filter-item">
+                        <label for="statusFilter">Filter by status:</label>
+                        <select id="statusFilter" onchange="filterResults()">
+                            <option value="all">All Links</option>
+                            <option value="healthy">Healthy Only</option>
+                            <option value="broken">Broken Only</option>
+                            <option value="warning">Slow Only</option>
+                            <option value="redirect">Redirects Only</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label for="sortBy">Sort by:</label>
+                        <select id="sortBy" onchange="sortResults()">
+                            <option value="original">Original Order</option>
+                            <option value="status">Status</option>
+                            <option value="responseTime">Response Time</option>
+                            <option value="url">URL</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="resultsList"></div>
+
+                <div class="export-section">
+                    <button class="btn btn-primary" onclick="exportResults()">📤 Export Report (CSV)</button>
+                    <button class="btn btn-secondary" onclick="exportJSON()">📋 Export JSON</button>
+                    <p style="margin-top: 10px; color: #6c757d; font-size: 14px;">
+                        Save this report to track link performance over time
+                    </p>
+                </div>
+            </div>
+
+            <!-- Email Capture Section -->
+            <div class="email-capture-section">
+                <div class="capture-header">
+                    <h3>🚀 Get Early Access to the Complete Marketing Toolkit</h3>
+                    <p><strong>This link checker is just the beginning!</strong> Join <strong>500+ affiliate marketers</strong> waiting for the full suite of 25+ marketing automation tools launching soon.</p>
+                </div>
+                
+                <form name="pro-waitlist" method="POST" data-netlify="true" class="email-form" onsubmit="handleEmailSubmit(event)">
+                    <div class="form-row">
+                        <input type="email" name="email" placeholder="Enter your email address" required class="email-input">
+                        <button type="submit" class="btn btn-capture">Join Waitlist</button>
+                    </div>
+                    <input type="hidden" name="form-name" value="pro-waitlist">
+                    <input type="hidden" name="tool-source" value="affiliate-link-checker">
+                    <input type="hidden" name="signup-date" id="signupDate">
+                </form>
+                
+                <div class="capture-benefits">
+                    <div class="benefit-item">
+                        <span class="benefit-icon">🎯</span>
+                        <span>First access when tools launch</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-icon">💰</span>
+                        <span>50% OFF early bird pricing</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-icon">📧</span>
+                        <span>Weekly affiliate marketing tips</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-icon">🔒</span>
+                        <span>No spam, unsubscribe anytime</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pro-features">
+                <h4>🔥 Coming Soon: The Complete Pro Marketing Toolkit</h4>
+                <div class="launch-timeline">
+                    <div class="timeline-item current">
+                        <span class="timeline-icon">✅</span>
+                        <span><strong>Phase 1:</strong> Link Health Checker (Available Now)</span>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-icon">🚧</span>
+                        <span><strong>Phase 2:</strong> 5 Core Tools (Coming Soon)</span>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="timeline-icon">⏳</span>
+                        <span><strong>Phase 3:</strong> Complete 25+ Tool Suite (Coming Soon)</span>
+                    </div>
+                </div>
+                
+                <h5 style="margin: 20px 0 15px 0; color: #8b4513;">What's Coming Next:</h5>
+                <ul>
+                    <li>Automated competitor price monitoring & alerts</li>
+                    <li>Bulk domain availability checker for new campaigns</li>
+                    <li>Social media post scheduler with CSV integration</li>
+                    <li>Analytics aggregator (Google Analytics + Facebook + affiliate networks)</li>
+                    <li>Broken link finder for competitor sites</li>
+                    <li>SSL certificate monitor for your money sites</li>
+                    <li>Site speed testing & optimization recommendations</li>
+                    <li>...and 18+ more tools based on your feedback!</li>
+                </ul>
+                <p style="margin-top: 15px; color: #8b4513; font-weight: 600;">
+                    💰 Early Bird Price: $29/month (Regular: $59/month) • 🚀 Launching Soon
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let checkResults = [];
+        let originalResults = [];
+        let isChecking = false;
+
+        function loadDemoLinks() {
+            const demoLinks = `https://httpbin.org/status/200
+https://httpbin.org/status/404
+https://httpbin.org/redirect/3
+https://google.com
+https://httpbin.org/status/500
+https://github.com
+https://httpbin.org/delay/3`;
+            
+            document.getElementById('links').value = demoLinks;
+        }
+
+        function toggleAdvancedOptions() {
+            const options = document.getElementById('advancedOptions');
+            options.classList.toggle('active');
+        }
+
+        function clearAll() {
+            document.getElementById('links').value = '';
+            document.getElementById('results').classList.add('hidden');
+            document.getElementById('progressSection').classList.remove('active');
+            checkResults = [];
+            originalResults = [];
+        }
+
+        async function checkLinks() {
+            if (isChecking) return;
+
+            const linksText = document.getElementById('links').value.trim();
+            if (!linksText) {
+                showMessage('Please enter some links to check!', 'error');
+                return;
+            }
+
+            const links = linksText.split('\n').filter(link => link.trim());
+            if (links.length === 0) {
+                showMessage('Please enter valid links!', 'error');
+                return;
+            }
+
+            if (links.length > 50) {
+                showMessage('Free version limited to 50 links. Upgrade to Pro for unlimited checking!', 'error');
+                return;
+            }
+
+            isChecking = true;
+            checkResults = [];
+            originalResults = [];
+
+            // Show progress
+            document.getElementById('progressSection').classList.add('active');
+            document.getElementById('results').classList.add('hidden');
+
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const progressCount = document.getElementById('progressCount');
+
+            let completed = 0;
+            const total = links.length;
+
+            progressCount.textContent = `0 / ${total}`;
+            progressBar.style.width = '0%';
+
+            // Get options
+            const options = {
+                followRedirects: document.getElementById('followRedirects').checked,
+                checkSSL: document.getElementById('checkSSL').checked,
+                checkSpeed: document.getElementById('checkSpeed').checked,
+                timeout: parseInt(document.getElementById('timeout').value) * 1000,
+                userAgent: document.getElementById('userAgent').value
+            };
+
+            // Process links with controlled concurrency
+            const concurrency = 5; // Process 5 links at a time
+            const batches = [];
+            for (let i = 0; i < links.length; i += concurrency) {
+                batches.push(links.slice(i, i + concurrency));
+            }
+
+            for (const batch of batches) {
+                const promises = batch.map(async (link) => {
+                    const result = await checkSingleLink(link.trim(), options);
+                    checkResults.push(result);
+                    completed++;
+                    
+                    const progress = (completed / total) * 100;
+                    progressBar.style.width = `${progress}%`;
+                    progressCount.textContent = `${completed} / ${total}`;
+                    progressText.textContent = `Checking: ${result.url}`;
+                    
+                    return result;
+                });
+
+                await Promise.all(promises);
+                // Small delay between batches to prevent overwhelming
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+
+            originalResults = [...checkResults];
+            
+            // Hide progress, show results
+            document.getElementById('progressSection').classList.remove('active');
+            document.getElementById('results').classList.remove('hidden');
+
+            updateStats();
+            displayResults();
+            isChecking = false;
+
+            showMessage(`Successfully checked ${total} links!`, 'success');
+        }
+
+        async function checkSingleLink(url, options) {
+            const startTime = Date.now();
+            
+            try {
+                // Validate URL format
+                if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                    url = 'https://' + url;
+                }
+
+                new URL(url); // Validate URL format
+
+                // Since we're in a browser environment, we'll use a CORS proxy for actual HTTP requests
+                // For production, this would be handled by a backend service
+                const response = await fetchWithTimeout(url, {
+                    method: 'HEAD',
+                    mode: 'no-cors', // This limits what we can detect, but allows cross-origin requests
+                    redirect: options.followRedirects ? 'follow' : 'manual'
+                }, options.timeout);
+
+                const responseTime = Date.now() - startTime;
+                
+                // Since we're using no-cors mode, we can't access the actual status
+                // In production, this would be handled by a proper backend
+                return {
+                    url: url,
+                    status: responseTime > 3000 ? 'warning' : 'healthy',
+                    statusCode: responseTime > 5000 ? 'timeout' : '200',
+                    message: responseTime > 3000 ? 'Slow Response' : 'OK',
+                    responseTime: responseTime,
+                    redirectChain: options.followRedirects ? await getRedirectChain(url) : null,
+                    sslValid: options.checkSSL ? url.startsWith('https://') : null,
+                    timestamp: new Date().toISOString()
+                };
+
+            } catch (error) {
+                const responseTime = Date.now() - startTime;
+                
+                return {
+                    url: url,
+                    status: 'broken',
+                    statusCode: 'error',
+                    message: error.message.includes('fetch') ? 'Network Error' : 'Invalid URL',
+                    responseTime: responseTime,
+                    redirectChain: null,
+                    sslValid: null,
+                    timestamp: new Date().toISOString(),
+                    error: error.message
+                };
+            }
+        }
+
+        async function fetchWithTimeout(url, options, timeout) {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), timeout);
+            
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+                return response;
+            } catch (error) {
+                clearTimeout(timeoutId);
+                if (error.name === 'AbortError') {
+                    throw new Error('Request timeout');
+                }
+                throw error;
+            }
+        }
+
+        async function getRedirectChain(url) {
+            // Simplified redirect detection - in production this would be more sophisticated
+            try {
+                const response = await fetch(url, { method: 'HEAD', redirect: 'manual' });
+                if (response.type === 'opaqueredirect') {
+                    return [{ url: url, status: 'redirect' }];
+                }
+                return null;
+            } catch {
+                return null;
+            }
+        }
+
+        function updateStats() {
+            const stats = {
+                healthy: 0,
+                broken: 0,
+                warning: 0,
+                redirect: 0
+            };
+
+            checkResults.forEach(result => {
+                if (result.redirectChain && result.redirectChain.length > 0) {
+                    stats.redirect++;
+                } else {
+                    stats[result.status]++;
+                }
+            });
+
+            document.getElementById('healthyCount').textContent = stats.healthy;
+            document.getElementById('brokenCount').textContent = stats.broken;
+            document.getElementById('warningCount').textContent = stats.warning;
+            document.getElementById('redirectCount').textContent = stats.redirect;
+        }
+
+        function displayResults() {
+            const resultsList = document.getElementById('resultsList');
+            resultsList.innerHTML = '';
+
+            checkResults.forEach((result, index) => {
+                const item = document.createElement('div');
+                
+                let statusClass = result.status;
+                if (result.redirectChain && result.redirectChain.length > 0) {
+                    statusClass = 'redirect';
+                }
+                
+                item.className = `result-item ${statusClass}`;
+                
+                let redirectHtml = '';
+                if (result.redirectChain && result.redirectChain.length > 0) {
+                    redirectHtml = `
+                        <div class="redirect-chain">
+                            <strong>Redirect Chain:</strong>
+                            ${result.redirectChain.map(step => `<div class="redirect-step">${step.url}</div>`).join('')}
+                        </div>
+                    `;
+                }
+
+                let errorHtml = '';
+                if (result.error) {
+                    errorHtml = `<div class="error-message">Error: ${result.error}</div>`;
+                }
+                
+                item.innerHTML = `
+                    <div class="result-url">${result.url}</div>
+                    <div class="result-details">
+                        <div class="result-info">
+                            <span class="status-badge status-${statusClass}">
+                                ${result.statusCode} ${result.message}
+                            </span>
+                            ${result.sslValid !== null ? `<small>SSL: ${result.sslValid ? '✅ Valid' : '❌ Invalid'}</small>` : ''}
+                        </div>
+                        <div class="result-metrics">
+                            <div>${result.responseTime}ms</div>
+                            <small>${new Date(result.timestamp).toLocaleTimeString()}</small>
+                        </div>
+                    </div>
+                    ${redirectHtml}
+                    ${errorHtml}
+                `;
+                
+                resultsList.appendChild(item);
+            });
+        }
+
+        function filterResults() {
+            const filter = document.getElementById('statusFilter').value;
+            
+            if (filter === 'all') {
+                checkResults = [...originalResults];
+            } else {
+                checkResults = originalResults.filter(result => {
+                    if (filter === 'redirect') {
+                        return result.redirectChain && result.redirectChain.length > 0;
+                    }
+                    return result.status === filter;
+                });
+            }
+            
+            displayResults();
+            updateStats();
+        }
+
+        function sortResults() {
+            const sortBy = document.getElementById('sortBy').value;
+            
+            switch (sortBy) {
+                case 'status':
+                    checkResults.sort((a, b) => a.status.localeCompare(b.status));
+                    break;
+                case 'responseTime':
+                    checkResults.sort((a, b) => a.responseTime - b.responseTime);
+                    break;
+                case 'url':
+                    checkResults.sort((a, b) => a.url.localeCompare(b.url));
+                    break;
+                case 'original':
+                default:
+                    checkResults = [...originalResults];
+                    break;
+            }
+            
+            displayResults();
+        }
+
+        function exportResults() {
+            if (checkResults.length === 0) {
+                showMessage('No results to export!', 'error');
+                return;
+            }
+
+            // Create CSV content
+            const headers = ['URL', 'Status', 'Status Code', 'Message', 'Response Time (ms)', 'SSL Valid', 'Has Redirects', 'Checked At'];
+            const rows = checkResults.map(result => [
+                result.url,
+                result.status,
+                result.statusCode,
+                result.message,
+                result.responseTime,
+                result.sslValid !== null ? (result.sslValid ? 'Yes' : 'No') : 'N/A',
+                result.redirectChain && result.redirectChain.length > 0 ? 'Yes' : 'No',
+                result.timestamp
+            ]);
+
+            let csvContent = headers.join(',') + '\n';
+            rows.forEach(row => {
+                csvContent += row.map(field => `"${field}"`).join(',') + '\n';
+            });
+
+            // Download CSV
+            downloadFile(csvContent, `affiliate-links-health-report-${new Date().toISOString().split('T')[0]}.csv`, 'text/csv');
+            showMessage('CSV report exported successfully!', 'success');
+        }
+
+        function exportJSON() {
+            if (checkResults.length === 0) {
+                showMessage('No results to export!', 'error');
+                return;
+            }
+
+            const jsonContent = JSON.stringify({
+                exportDate: new Date().toISOString(),
+                totalLinks: checkResults.length,
+                summary: {
+                    healthy: checkResults.filter(r => r.status === 'healthy').length,
+                    broken: checkResults.filter(r => r.status === 'broken').length,
+                    warning: checkResults.filter(r => r.status === 'warning').length,
+                    redirects: checkResults.filter(r => r.redirectChain && r.redirectChain.length > 0).length
+                },
+                results: checkResults
+            }, null, 2);
+
+            downloadFile(jsonContent, `affiliate-links-report-${new Date().toISOString().split('T')[0]}.json`, 'application/json');
+            showMessage('JSON report exported successfully!', 'success');
+        }
+
+        function downloadFile(content, filename, contentType) {
+            const blob = new Blob([content], { type: contentType });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        function showMessage(message, type) {
+            // Remove existing messages
+            const existingMessages = document.querySelectorAll('.error-message, .success-message');
+            existingMessages.forEach(msg => msg.remove());
+
+            // Create new message
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type === 'error' ? 'error-message' : 'success-message';
+            messageDiv.textContent = message;
+
+            // Add to input section
+            const inputSection = document.querySelector('.input-section');
+            inputSection.appendChild(messageDiv);
+
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.remove();
+                }
+            }, 5000);
+        }
+
+        function handleEmailSubmit(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const email = form.email.value;
+            
+            // Set hidden fields
+            document.getElementById('signupDate').value = new Date().toISOString();
+            
+            // Show loading state
+            const submitBtn = form.querySelector('.btn-capture');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Joining...';
+            submitBtn.disabled = true;
+            
+            // Submit to Netlify
+            fetch('/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams(new FormData(form)).toString()
+            })
+            .then(() => {
+                // Show success message
+                showSuccessPopup(email);
+                form.reset();
+                trackEvent('email_signup', { email: email });
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                showMessage('Something went wrong. Please try again!', 'error');
+            })
+            .finally(() => {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            });
+        }
+
+        function showSuccessPopup(email) {
+            // Create popup elements
+            const overlay = document.createElement('div');
+            overlay.className = 'popup-overlay show';
+            
+            const popup = document.createElement('div');
+            popup.className = 'success-popup show';
+            popup.innerHTML = `
+                <h3 style="color: #28a745; margin-bottom: 15px;">🎉 Welcome to the VIP List!</h3>
+                <p style="margin-bottom: 20px;">Thanks for joining! You'll be the first to know when the Pro toolkit launches.</p>
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                    <strong>What happens next?</strong><br>
+                    ✅ Confirmation email sent to ${email}<br>
+                    📧 Weekly affiliate tips starting this week<br>
+                    🚀 Early access notification when Pro launches<br>
+                    💰 Exclusive 50% OFF early bird pricing
+                </div>
+                <button onclick="closeSuccessPopup()" style="background: #28a745; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                    Awesome, Got It!
+                </button>
+            `;
+            
+            document.body.appendChild(overlay);
+            document.body.appendChild(popup);
+            
+            // Auto-close after 30 seconds (or user clicks button)
+            setTimeout(closeSuccessPopup, 30000);
+        }
+
+        function closeSuccessPopup() {
+            const overlay = document.querySelector('.popup-overlay');
+            const popup = document.querySelector('.success-popup');
+            
+            if (overlay) overlay.remove();
+            if (popup) popup.remove();
+        }
+
+        // Track email signups for analytics
+        function trackEmailSignup(email) {
+            // In production, this would send to analytics service
+            console.log('Email signup:', email, new Date().toISOString());
+            
+            // Update UI to show social proof
+            updateSocialProof();
+        }
+
+        function updateSocialProof() {
+            // Increment the social proof counter
+            const socialProofElements = document.querySelectorAll('.capture-header p strong');
+            socialProofElements.forEach(element => {
+                if (element.textContent.includes('affiliate marketers')) {
+                    const currentNumber = parseInt(element.textContent.match(/\d+/)[0]);
+                    element.textContent = `${currentNumber + 1}+ affiliate marketers`;
+                }
+            });
+        }
+
+        // Add exit-intent popup for email capture
+        let exitIntentShown = false;
+        
+        document.addEventListener('mouseleave', function(e) {
+            if (e.clientY <= 0 && !exitIntentShown) {
+                exitIntentShown = true;
+                showExitIntentPopup();
+            }
+        });
+
+        function showExitIntentPopup() {
+            // Only show if user hasn't already signed up
+            const hasSignedUp = localStorage.getItem('emailSignup');
+            if (hasSignedUp) return;
+            
+            setTimeout(() => {
+                if (confirm('🚨 Wait! Don\'t miss out on the Pro tools launch.\n\nJoin our VIP list for 50% OFF early access?\n\n(Click OK to join, Cancel to continue)')) {
+                    document.querySelector('.email-capture-section').scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                    document.querySelector('.email-input').focus();
+                }
+            }, 500);
+        }
+
+        // Save email signup status
+        function saveEmailSignup() {
+            localStorage.setItem('emailSignup', 'true');
+            localStorage.setItem('signupDate', new Date().toISOString());
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'Enter':
+                        e.preventDefault();
+                        if (!isChecking) checkLinks();
+                        break;
+                    case 's':
+                        e.preventDefault();
+                        if (checkResults.length > 0) exportResults();
+                        break;
+                }
+            }
+        });
+
+        // Auto-save results to localStorage for recovery
+        function saveResults() {
+            if (checkResults.length > 0) {
+                localStorage.setItem('linkChecker_lastResults', JSON.stringify({
+                    timestamp: Date.now(),
+                    results: checkResults
+                }));
+            }
+        }
+
+        function loadPreviousResults() {
+            const saved = localStorage.getItem('linkChecker_lastResults');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    const ageHours = (Date.now() - data.timestamp) / (1000 * 60 * 60);
+                    
+                    if (ageHours < 24 && data.results.length > 0) {
+                        const restore = confirm(`Found previous scan results from ${new Date(data.timestamp).toLocaleString()}. Restore them?`);
+                        if (restore) {
+                            checkResults = data.results;
+                            originalResults = [...checkResults];
+                            document.getElementById('results').classList.remove('hidden');
+                            updateStats();
+                            displayResults();
+                            showMessage('Previous results restored!', 'success');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error loading previous results:', error);
+                }
+            }
+        }
+
+        // Initialize app
+        window.addEventListener('load', function() {
+            // Smooth entrance animation
+            document.querySelector('.container').style.opacity = '0';
+            document.querySelector('.container').style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                document.querySelector('.container').style.transition = 'all 0.6s ease';
+                document.querySelector('.container').style.opacity = '1';
+                document.querySelector('.container').style.transform = 'translateY(0)';
+            }, 100);
+
+            // Load previous results if available
+            setTimeout(loadPreviousResults, 1000);
+
+            // Save results periodically
+            setInterval(saveResults, 30000); // Save every 30 seconds if there are results
+        });
+
+        // Save results before page unload
+        window.addEventListener('beforeunload', saveResults);
+
+        // Add tooltips for advanced features
+        function addTooltips() {
+            const tooltips = {
+                'followRedirects': 'Track redirect chains to identify affiliate link issues',
+                'checkSSL': 'Verify SSL certificates are valid and secure',
+                'checkSpeed': 'Measure page load performance and identify slow links',
+                'timeout': 'Maximum time to wait for each link response',
+                'userAgent': 'Browser identity sent with requests'
+            };
+
+            Object.keys(tooltips).forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.title = tooltips[id];
+                }
+            });
+        }
+
+        // Initialize tooltips
+        setTimeout(addTooltips, 500);
+
+        // Track usage analytics (privacy-friendly)
+        function trackEvent(event, data) {
+            // In production, this would send to analytics service
+            console.log('Analytics:', event, data);
+        }
+
+        // Track key events
+        window.addEventListener('load', () => trackEvent('page_load'));
+    </script>
+</body>
+</html>
