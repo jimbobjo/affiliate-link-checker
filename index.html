@@ -938,14 +938,259 @@ https://httpbin.org/delay/3`;
             originalResults = [];
         }
 
-        async function checkLinks() {
-            if (isChecking) return;
+       // Enhanced Frontend API Integration for Production Serverless Architecture
+// Replace the existing checkLinks() function in your index.html
 
-            const linksText = document.getElementById('links').value.trim();
-            if (!linksText) {
-                showMessage('Please enter some links to check!', 'error');
-                return;
+async function checkLinks() {
+    if (isChecking) return;
+
+    const linksText = document.getElementById('links').value.trim();
+    if (!linksText) {
+        showMessage('Please enter some links to check!', 'error');
+        return;
+    }
+
+    const links = linksText.split('\n').filter(link => link.trim());
+    if (links.length === 0) {
+        showMessage('Please enter valid links!', 'error');
+        return;
+    }
+
+    if (links.length > 50) {
+        showMessage('Free version limited to 50 links. Upgrade to Pro for unlimited checking!', 'error');
+        return;
+    }
+
+    isChecking = true;
+    checkResults = [];
+    originalResults = [];
+
+    // Initialize progressive UI feedback systems
+    document.getElementById('progressSection').classList.add('active');
+    document.getElementById('results').classList.add('hidden');
+
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    const progressCount = document.getElementById('progressCount');
+
+    progressCount.textContent = `0 / ${links.length}`;
+    progressBar.style.width = '0%';
+    progressText.textContent = 'Initializing enterprise-grade validation protocols...';
+
+    // Extract advanced configuration parameters
+    const options = {
+        followRedirects: document.getElementById('followRedirects').checked,
+        checkSSL: document.getElementById('checkSSL').checked,
+        checkSpeed: document.getElementById('checkSpeed').checked,
+        timeout: parseInt(document.getElementById('timeout').value) * 1000,
+        userAgent: document.getElementById('userAgent').value
+    };
+
+    try {
+        // Implement progressive feedback mechanisms
+        progressText.textContent = 'Establishing secure API communication channels...';
+        progressBar.style.width = '10%';
+
+        // Execute production API communication protocol
+        const response = await fetch('/.netlify/functions/check-links', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                links: links,
+                options: options
+            })
+        });
+
+        progressText.textContent = 'Processing serverless function response...';
+        progressBar.style.width = '70%';
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        
+        // Validate API response architecture
+        if (!data.results || !Array.isArray(data.results)) {
+            throw new Error('Invalid API response structure received');
+        }
+
+        checkResults = data.results;
+        originalResults = [...checkResults];
+
+        // Implement sophisticated progress visualization
+        progressText.textContent = 'Optimizing result presentation interface...';
+        progressBar.style.width = '95%';
+
+        // Execute completion protocols with enhanced UX feedback
+        setTimeout(() => {
+            progressBar.style.width = '100%';
+            progressCount.textContent = `${links.length} / ${links.length}`;
+            progressText.textContent = 'Enterprise validation protocols completed successfully!';
+
+            setTimeout(() => {
+                document.getElementById('progressSection').classList.remove('active');
+                document.getElementById('results').classList.remove('hidden');
+                updateStats();
+                displayResults();
+                
+                // Enhanced success notification with performance metrics
+                const processingTime = data.summary?.averageResponseTime || 'Unknown';
+                showMessage(`Successfully validated ${links.length} affiliate links. Average response time: ${processingTime}ms`, 'success');
+                
+                // Advanced analytics integration
+                trackEvent('link_validation_completed', {
+                    linkCount: links.length,
+                    averageResponseTime: processingTime,
+                    healthyLinks: data.summary?.healthy || 0,
+                    brokenLinks: data.summary?.broken || 0
+                });
+                
+            }, 800);
+        }, 300);
+
+    } catch (error) {
+        console.error('Enterprise validation pipeline encountered critical error:', error);
+        
+        // Comprehensive error classification and user communication
+        let userMessage = 'Validation processing encountered an unexpected error.';
+        let technicalContext = '';
+        
+        if (error.message.includes('fetch')) {
+            userMessage = 'Network connectivity issue detected. Please verify internet connection.';
+            technicalContext = 'Network layer communication failure';
+        } else if (error.message.includes('HTTP 4')) {
+            userMessage = 'Request validation failed. Please verify link format and try again.';
+            technicalContext = 'Client request validation error';
+        } else if (error.message.includes('HTTP 5')) {
+            userMessage = 'Server processing temporarily unavailable. Please retry in a few moments.';
+            technicalContext = 'Server-side processing error';
+        } else if (error.message.includes('timeout')) {
+            userMessage = 'Request processing exceeded timeout limits. Consider reducing link count.';
+            technicalContext = 'Processing timeout exceeded';
+        }
+        
+        // Graceful degradation protocols
+        document.getElementById('progressSection').classList.remove('active');
+        showMessage(`${userMessage} (${error.message})`, 'error');
+        
+        // Advanced error analytics integration
+        trackEvent('link_validation_error', {
+            errorType: technicalContext,
+            errorMessage: error.message,
+            linkCount: links.length,
+            timestamp: new Date().toISOString()
+        });
+        
+    } finally {
+        isChecking = false;
+    }
+}
+
+// Enhanced result display with comprehensive data visualization
+function displayResults() {
+    const resultsList = document.getElementById('resultsList');
+    resultsList.innerHTML = '';
+
+    checkResults.forEach((result, index) => {
+        const item = document.createElement('div');
+        
+        let statusClass = result.status;
+        if (result.redirectChain && result.redirectChain.length > 0) {
+            statusClass = 'redirect';
+        }
+        
+        item.className = `result-item ${statusClass}`;
+        
+        // Advanced redirect chain visualization
+        let redirectHtml = '';
+        if (result.redirectChain && result.redirectChain.length > 0) {
+            redirectHtml = `
+                <div class="redirect-chain">
+                    <strong>Redirect Chain Analysis:</strong>
+                    ${result.redirectChain.map(step => 
+                        `<div class="redirect-step">${step.url} → ${step.location} (HTTP ${step.status})</div>`
+                    ).join('')}
+                </div>
+            `;
+        }
+
+        // Comprehensive error context presentation
+        let errorHtml = '';
+        if (result.error) {
+            errorHtml = `<div class="error-message">Technical Details: ${result.error}</div>`;
+        }
+
+        // Enhanced server information display
+        let headerInfo = '';
+        if (result.headers) {
+            const serverInfo = result.headers.server ? `Server: ${result.headers.server}` : '';
+            const contentType = result.headers['content-type'] ? `Type: ${result.headers['content-type']}` : '';
+            headerInfo = `<small>${[serverInfo, contentType].filter(Boolean).join(' | ')}</small>`;
+        }
+
+        // Performance classification with visual indicators
+        let performanceIndicator = '';
+        if (result.responseTime) {
+            if (result.responseTime < 1000) {
+                performanceIndicator = '🚀 Excellent';
+            } else if (result.responseTime < 3000) {
+                performanceIndicator = '✅ Good';
+            } else if (result.responseTime < 5000) {
+                performanceIndicator = '⚠️ Slow';
+            } else {
+                performanceIndicator = '🐌 Very Slow';
             }
+        }
+        
+        item.innerHTML = `
+            <div class="result-url">${result.url}</div>
+            <div class="result-details">
+                <div class="result-info">
+                    <span class="status-badge status-${statusClass}">
+                        ${result.statusCode} ${result.message}
+                    </span>
+                    ${result.sslValid !== null ? `<small>SSL: ${result.sslValid ? '✅ Valid Certificate' : '❌ Certificate Issue'}</small>` : ''}
+                    ${headerInfo}
+                </div>
+                <div class="result-metrics">
+                    <div>${result.responseTime}ms ${performanceIndicator}</div>
+                    <small>${new Date(result.timestamp).toLocaleTimeString()}</small>
+                </div>
+            </div>
+            ${redirectHtml}
+            ${errorHtml}
+        `;
+        
+        resultsList.appendChild(item);
+    });
+}
+
+// Enhanced analytics integration with comprehensive event tracking
+function trackEvent(eventName, eventData) {
+    // Production analytics implementation placeholder
+    console.log(`Analytics Event: ${eventName}`, eventData);
+    
+    // Advanced user behavior analytics integration
+    if (typeof gtag !== 'undefined') {
+        gtag('event', eventName, {
+            custom_parameter: eventData,
+            timestamp: new Date().toISOString()
+        });
+    }
+    
+    // Enterprise analytics platform integration
+    if (typeof analytics !== 'undefined') {
+        analytics.track(eventName, {
+            ...eventData,
+            source: 'affiliate_link_checker',
+            version: '2.0.0'
+        });
+    }
+}
 
             const links = linksText.split('\n').filter(link => link.trim());
             if (links.length === 0) {
